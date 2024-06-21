@@ -1,0 +1,115 @@
+---
+title: "subgroup analysis forest plot R code"
+output: html_document
+date: "2024-06-19"
+---
+
+```{r Load libraries}
+library(ggplot2)
+library(ggforestplot)
+library(readxl)
+```
+```{r Load dataframes}
+CASE1 = read_excel("D:\\forest data.xlsx",col_names = T,sheet="sub")
+```
+```{r setup, include=TRUE}
+head(CASE1)
+transpose <- t(CASE1)
+transpose <- as.data.frame(transpose)
+rev_data_frame <- rev(transpose)
+CASE2 <- t(rev_data_frame)
+summary(CASE2)
+CASE2=as.data.frame(CASE2)
+CASE2$HR=as.numeric(CASE2$HR)
+CASE2$lower=as.numeric(CASE2$lower)
+CASE2$upper=as.numeric(CASE2$upper)
+
+CASE2$name =factor(CASE2$name,levels=c("After 2006","After 2006","After 2006",
+                                       "Long acting GLP-1 RA","Long acting GLP-1 RA","Long acting GLP-1 RA",
+                                       "Short acting GLP-1 RA","Short acting GLP-1 RA","Short acting GLP-1 RA",
+                                       "New-user GLP-1 RA","New-user GLP-1 RA","New-user GLP-1 RA",
+                                       "Fast-acting insulin+","Fast-acting insulin+","Fast-acting insulin+",
+                                       "Long-acting insulin+","Long-acting insulin+","Long-acting insulin+",
+                                       "ACEi/ARB-","ACEi/ARB-","ACEi/ARB-",
+                                       "ACEi/ARB+","ACEi/ARB+","ACEi/ARB+",
+                                       "DPP-4-","DPP-4-","DPP-4-","DPP-4+","DPP-4+","DPP-4+",
+                                       "Sulfonylurea-","Sulfonylurea-","Sulfonylurea-",
+                                       "Sulfonylurea+","Sulfonylurea+","Sulfonylurea+",
+                                       "SGLT-2i-","SGLT-2i-","SGLT-2i-",
+                                       "SGLT-2i+","SGLT-2i+","SGLT-2i+",
+                                       "Metformin-","Metformin-","Metformin-",
+                                       "Metformin+","Metformin+","Metformin+",
+                                       "Insulin-","Insulin-","Insulin-",
+                                       "Insulin+","Insulin+","Insulin+",
+                                       "Proteinuria-","Proteinuria-","Proteinuria-",
+                                       "Proteinuria+","Proteinuria+","Proteinuria+",
+                                       "eGFR>30","eGFR>30","eGFR>30",
+                                       "eGFR≤30","eGFR≤30","eGFR≤30",
+                                       "eGFR>45","eGFR>45","eGFR>45",
+                                       "eGFR≤45","eGFR≤45","eGFR≤45",
+                                       "CHF-","CHF-","CHF-", "CHF+","CHF+","CHF+",
+                                       "HTN-","HTN-","HTN-","HTN+","HTN+","HTN+",
+                                       "Age>65","Age>65","Age>65",
+                                       "Age≤65","Age≤65","Age≤65"),
+                   labels = c("After 2006","After 2006","After 2006",
+                              "Long acting GLP-1 RA","Long acting GLP-1 RA","Long acting GLP-1 RA",
+                              "Short acting GLP-1 RA","Short acting GLP-1 RA","Short acting GLP-1 RA",
+                              "New-user GLP-1 RA","New-user GLP-1 RA","New-user GLP-1 RA",
+                              "Fast-acting insulin+","Fast-acting insulin+","Fast-acting insulin+",
+                              "Long-acting insulin+","Long-acting insulin+","Long-acting insulin+",
+                              "ACEi/ARB-","ACEi/ARB-","ACEi/ARB-",
+                              "ACEi/ARB+","ACEi/ARB+","ACEi/ARB+",
+                              "DPP-4-","DPP-4-","DPP-4-","DPP-4+","DPP-4+","DPP-4+",
+                              "Sulfonylurea-","Sulfonylurea-","Sulfonylurea-",
+                              "Sulfonylurea+","Sulfonylurea+","Sulfonylurea+",
+                              "SGLT-2i-","SGLT-2i-","SGLT-2i-",
+                              "SGLT-2i+","SGLT-2i+","SGLT-2i+",
+                              "Metformin-","Metformin-","Metformin-",
+                              "Metformin+","Metformin+","Metformin+",
+                              "Insulin-","Insulin-","Insulin-",
+                              "Insulin+","Insulin+","Insulin+",
+                              "Proteinuria-","Proteinuria-","Proteinuria-",
+                              "Proteinuria+","Proteinuria+","Proteinuria+",
+                              "eGFR>30","eGFR>30","eGFR>30",
+                              "eGFR≤30","eGFR≤30","eGFR≤30",
+                              "eGFR>45","eGFR>45","eGFR>45",
+                              "eGFR≤45","eGFR≤45","eGFR≤45",
+                              "CHF-","CHF-","CHF-", "CHF+","CHF+","CHF+",
+                              "HTN-","HTN-","HTN-","HTN+","HTN+","HTN+",
+                              "Age>65","Age>65","Age>65",
+                              "Age≤65","Age≤65","Age≤65"))
+
+CASE2$Outcome =factor(CASE2$Outcome,levels=c("4P-MAKE","4P-MACE","Mortality"))
+
+CASE2=CASE2[!(CASE2$name==c("eGFR>30","eGFR>30","eGFR>30")),] 
+CASE2=CASE2[!(CASE2$name==c("eGFR≤30","eGFR≤30","eGFR≤30")),] 
+CASE2=CASE2[!(CASE2$name==c("SGLT-2i-","SGLT-2i-","SGLT-2i-")),] 
+CASE2=CASE2[!(CASE2$name==c("SGLT-2i+","SGLT-2i+","SGLT-2i+")),] 
+```
+```{r fig, fig.height = 9, fig.width = 6, fig.align = "center"}
+ggplot(data = CASE2, aes(x = HR, y = name)) +
+  geom_effect(aes(xmin = lower,xmax = upper,colour = Outcome,),
+              size=0.85,
+              position = ggstance::position_dodgev(height = 0.5)) +
+  xlim(0.25, 1.24)+
+  ylab("")+
+  xlab("aHR")+
+  scale_color_manual(values=alpha(c("darkslategrey","burlywood3","darkseagreen3"))) +
+  theme_forest() +
+  geom_stripes(odd = "#33333333", even = "#00000000") +
+  geom_vline(
+    xintercept = 1,
+    linetype = "solid",
+    linewidth = 0.5,
+    colour = "gray50"
+  ) +
+  theme(legend.key.size = unit(0.7, 'cm'), 
+        legend.title = element_text(size=13),
+        legend.text = element_text(size=11), 
+        axis.title.x = element_text(size = 12),
+        axis.text.x = element_text(size = 10),
+        axis.title.y = element_text(size = 12),
+        axis.text.y = element_text(size = 10))
+
+
+```

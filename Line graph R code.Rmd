@@ -1,0 +1,103 @@
+---
+title: "Line graph R code"
+output: html_document
+date: "2024-06-19"
+---
+
+```{r Load libraries}
+library(ggplot2)
+library(RColorBrewer)
+library(wesanderson)
+library(showtext)
+```
+
+```{r setup1, include=TRUE}
+HbA1C_mean=c(8.8,8.3,7.7,7.6,7.9,7.6)
+HbA1C_sd=c(2.4,2.6,1.86,1.95,1.9,2.02)
+HbA1C_time=c("baseline","baseline","D0-30","D0-30","D60-90","D60-90")
+HbA1C_group=c("GLP-1 agonists","Control","GLP-1 agonists","Control","GLP-1 agonists","Control")
+HbA1C_group1=c(1,2,1,2,1,2)
+HbA1C_data=data.frame(HbA1C_mean,HbA1C_sd,HbA1C_time,HbA1C_group,HbA1C_group1)
+HbA1C_data$HbA1C_time=as.factor(HbA1C_data$HbA1C_time)
+HbA1C_data$HbA1C_group=as.factor(HbA1C_data$HbA1C_group) 
+head(HbA1C_data)
+```
+
+```{r fig1, fig.height = 4, fig.width = 6, fig.align = "center"}
+#HbA1C
+ggplot(HbA1C_data, aes(x=HbA1C_time,y=HbA1C_mean,colour=HbA1C_group,group=HbA1C_group)) + 
+  geom_errorbar(data=HbA1C_data,
+                mapping=aes(x = HbA1C_time,ymin = HbA1C_mean-HbA1C_sd, ymax = HbA1C_mean+HbA1C_sd), 
+                width = 0.1,
+                colour = 'black',
+                linewidth=0.8,
+                position=position_dodge(0.2))+
+  geom_point(position=position_dodge(0.2),size=2.5)+
+  annotate("text", x=1, y=11.6, label= "*",size=10)+
+  annotate("text", x=2, y=10, label= "*",size=10)+
+  annotate("text", x=3, y=10.2, label= "*",size=10)+
+  geom_line(position=position_dodge(0.2))+
+  scale_colour_hue(name="group", 
+                   breaks=c("GLP-1 agonists","Control"),
+                   labels=c("GLP-1 agonists","Control"),
+                   l=40) +
+  ylim(2,14)+
+  theme_light()+
+  xlab("")+
+  ylab("HbA1C Mean (%)")+
+  theme(
+    legend.justification=c(1,0.5),
+    legend.title = element_text(size=15),
+    legend.text = element_text(size=12), 
+    text=element_text(size=15,face="plain",color="black"),
+    axis.title=element_text(size=15,face="plain",color="black"),
+    axis.text.x = element_text(angle=0,hjust=0.5,size=12,color="black"),
+    axis.text.y = element_text(angle=0,hjust=0.5,size=12,color="black")
+  )
+```
+
+
+```{r setup2, include=TRUE}
+#eGFR
+eGFR_mean=c(73.2,75.9,64.0,66.05,64.4,64.7)
+eGFR_sd=c(31.8,35.4,28.9,30.87,29.2,30.5)
+eGFR_time=c("baseline","baseline","D0-30","D0-30","D60-90","D60-90")
+eGFR_group=c("GLP-1 agonists","Control","GLP-1 agonists","Control","GLP-1 agonists","Control")
+eGFR_group1=c(1,2,1,2,1,2)
+eGFR_data=data.frame(eGFR_mean,eGFR_sd,eGFR_time,eGFR_group,eGFR_group1)
+eGFR_data$eGFR_time=as.factor(eGFR_data$eGFR_time)
+eGFR_data$eGFR_group=as.factor(eGFR_data$eGFR_group) 
+head(eGFR_data)
+```
+
+```{r fig2, fig.height = 4, fig.width = 6, fig.align = "center"}
+ggplot(eGFR_data, aes(x=eGFR_time,y=eGFR_mean,colour=eGFR_group,group=eGFR_group)) + 
+  geom_errorbar(data=eGFR_data,
+                mapping=aes(x = eGFR_time,ymin = eGFR_mean-eGFR_sd, ymax = eGFR_mean+eGFR_sd),
+                width = 0.1,
+                colour = 'black', 
+                linewidth=0.8,
+                position=position_dodge(0.2))+
+  geom_point(position=position_dodge(0.2),size=2.5)+
+  annotate("text", x=1, y=115, label= "*",size=10)+
+  annotate("text", x=2, y=100, label= "*",size=10)+
+  geom_line(position=position_dodge(0.2))+
+  scale_colour_hue(name="group", 
+                   breaks=c("GLP-1 agonists","Control"),
+                   labels=c("GLP-1 agonists","Control"),
+                   l=40) +
+  ylim(10,135)+
+  theme_light()+
+  xlab("")+
+  ylab(expression(paste('eGFR Mean (mL/min/1.73',m^2,')')))+
+  theme(
+    legend.justification=c(1,0.5),
+    legend.title = element_text(size=15),
+    legend.text = element_text(size=12), 
+    text=element_text(size=15,face="plain",color="black"),
+    axis.title=element_text(size=15,face="plain",color="black"),
+    axis.text.x = element_text(angle=0,hjust=0.5,size=12,color="black"),
+    axis.text.y = element_text(angle=0,hjust=0.5,size=12,color="black")
+  )
+
+```

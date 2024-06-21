@@ -1,0 +1,57 @@
+---
+title: "forest plot R code"
+output: html_document
+date: "2024-06-19"
+---
+```{r Load libraries}
+library(forestplot)
+library(readxl)
+```
+```{r Load dataframes}
+CASE1 = read_excel("D:\\forest data.xlsx",col_names = F,sheet="Specific")
+```
+```{r setup, include=TRUE}
+names(CASE1)
+colnames(CASE1)=c("V1","V2","V3","V4","V5")
+head(CASE1)
+CASE1=CASE1[!(CASE1$V1==c("Accidental poisoning")),] 
+CASE1=CASE1[!(CASE1$V1==c("Atopic dermatitis")),] 
+CASE1=CASE1[!(CASE1$V1==c("Hernia")),] 
+
+cochrane_from_rmeta <- 
+  structure(list(
+    mean  = CASE1$V3, 
+    lower = CASE1$V4,
+    upper = CASE1$V5),
+    .Names = c("mean", "lower", "upper"), 
+    row.names = c(NA, -15L), 
+    class = "data.frame")
+
+tabletext <- cbind( CASE1$V1, CASE1$V2)
+
+forestplot(tabletext, 
+           graph.pos = 3,
+           txt_gp=fpTxtGp(label=gpar(cex=1), ticks=gpar(cex=1),
+                          xlab=gpar(cex = 1),title=gpar(cex = 1)),
+           hrzl_lines = list("2" = gpar(lty = 1)),
+           cochrane_from_rmeta,new_page = TRUE,
+           is.summary = c(T,T,F,T,F,F,F,F,F,F,F,T,F,F,F),
+           align=c("r"),
+           lineheight = unit ( 8,'mm'),
+           boxsize = .3, 
+           lwd.zero = 1 ,
+           lwd.xaxis = 1 ,
+           lwd.ci = 1 ,
+           zero=1,
+           xlog = TRUE,
+           xlab="HR (95%CI)",
+           col = fpColors(box = "darkslategrey",
+                          line = "darkslategrey", 
+                          summary = "black", 
+                          hrz_lines = "black",
+                          zero="gray45",
+                          text="black",
+                          axes="black")) 
+
+
+```

@@ -1,0 +1,128 @@
+---
+title: "KM plot R code"
+output: html_document
+date: "2024-06-19"
+---
+
+```{r Load libraries}
+library(ggplot2)
+library(readxl)
+```
+
+```{r Load dataframes}
+CASE1 = read_excel("D:\\KMdata.xlsx",col_names = T,sheet="mortality")
+```
+
+```{r setup, include=TRUE}
+#mortality
+colnames(mortality)=c("Time_years","Survival_Probability","Lower","Upper","Cohort")
+mortality$Cohort=factor(mortality$Cohort,
+                        levels=c("cohort1","cohort2"),
+                        labels=c("GLP-1 RAs users ","GLP-1 RAs non-users "))
+
+mortality_KM=ggplot(data=mortality) +
+  geom_line(aes(x=Time_years, y=Survival_Probability,group=Cohort,color=Cohort),
+            linewidth =1.3) +
+  geom_ribbon(aes(x=Time_years,ymin=Lower,ymax=Upper,group=Cohort,#color=Cohort,
+                  fill=Cohort),alpha=0.4) +
+  scale_y_continuous(name = "Survival probabilitiy\n", 
+                     expand = c(0, 0.01), limits = c(0.7, 1),
+                     breaks = seq (0.7, 1, by = 0.05)) +
+  xlim(c(0.24,5))+
+  xlab("Years")+
+  ggtitle("Mortality\n")+
+  scale_fill_manual("",values=c("dodgerblue", "brown1")) +
+  scale_color_manual("",values=c("dodgerblue4", "brown4")) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5),
+        title=element_text(size=35, face='bold'),
+        panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.y = element_line(linewidth=0.5, color="darkgrey" ),
+        axis.line = element_line(colour = "black"),
+        axis.text.x = element_text(face="plain", color="black", size=28),
+        axis.text.y = element_text(face="plain", color="black", size=28),
+        axis.title.x = element_text(face="bold", color="black", size=33),
+        axis.title.y = element_text(face="bold",color="black", size=33),
+        legend.key.size = unit(2, 'cm'),
+        legend.title = element_text(size=30),
+        legend.text = element_text(size=30)) +
+  theme(text = element_text(size = 20))
+mortality_KM
+
+#MACE
+colnames(MACE)=c("Time_years","Survival_Probability","Lower","Upper","Cohort")
+MACE$Cohort=factor(MACE$Cohort,
+                   levels=c("cohort1","cohort2"),
+                   labels=c("GLP-1 RAs users ","GLP-1 RAs non-users "))
+
+MACE_KM=ggplot(data=MACE) +
+  geom_line(aes(x=Time_years, y=Survival_Probability,group=Cohort,color=Cohort),
+            linewidth =1.3) +
+  geom_ribbon(aes(x=Time_years,ymin=Lower,ymax=Upper,group=Cohort,#color=Cohort,
+                  fill=Cohort),alpha=0.4) +
+  scale_y_continuous(name = "Survival probabilitiy\n", 
+                     expand = c(0, 0.01), limits = c(0.7, 1),
+                     breaks = seq (0.7, 1, by = 0.05)) +
+  xlim(c(0.24,5))+
+  xlab("Years")+
+  ggtitle("MACE\n")+
+  scale_fill_manual("",values=c("dodgerblue", "brown1")) +
+  scale_color_manual("",values=c("dodgerblue4", "brown4")) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5),
+        title=element_text(size=35, face='bold'),
+        panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.y = element_line(linewidth=0.5, color="darkgrey" ),
+        axis.line = element_line(colour = "black"),
+        axis.text.x = element_text(face="plain", color="black", size=28),
+        axis.text.y = element_text(face="plain", color="black", size=28),
+        axis.title.x = element_text(face="bold", color="black", size=33),
+        axis.title.y = element_text(face="bold",color="black", size=33),
+        legend.key.size = unit(2, 'cm'),
+        legend.title = element_text(size=30),
+        legend.text = element_text(size=30)) +
+  theme(text = element_text(size = 20))
+MACE_KM
+
+
+#MAKE
+colnames(MAKE)=c("Time_years","Survival_Probability","Lower","Upper","Cohort")
+MAKE$Cohort=factor(MAKE$Cohort,
+                   levels=c("cohort1","cohort2"),
+                   labels=c("GLP-1 RAs users ","GLP-1 RAs non-users "))
+MAKE_KM=ggplot(data=MAKE) +
+  geom_line(aes(x=Time_years, y=Survival_Probability,group=Cohort,color=Cohort),
+            linewidth =1.3) +
+  geom_ribbon(aes(x=Time_years,ymin=Lower,ymax=Upper,group=Cohort,#color=Cohort,
+                  fill=Cohort),alpha=0.4) +
+  scale_y_continuous(name = "Survival probabilitiy\n", 
+                     expand = c(0, 0.01), limits = c(0.7, 1),
+                     breaks = seq (0.7, 1, by = 0.05)) +
+  xlim(c(0.24,5))+
+  xlab("Years")+
+  ggtitle("MAKE\n")+
+  scale_fill_manual("",values=c("dodgerblue", "brown1")) +
+  scale_color_manual("",values=c("dodgerblue4", "brown4")) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5),
+        title=element_text(size=35, face='bold'),
+        panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.y = element_line(linewidth=0.5, color="darkgrey" ),
+        axis.line = element_line(colour = "black"),
+        axis.text.x = element_text(face="plain", color="black", size=28),
+        axis.text.y = element_text(face="plain", color="black", size=28),
+        axis.title.x = element_text(face="bold", color="black", size=33),
+        axis.title.y = element_text(face="bold",color="black", size=33),
+        legend.key.size = unit(2, 'cm'),
+        legend.title = element_text(size=30),
+        legend.text = element_text(size=30)) +
+  theme(text = element_text(size = 20))
+MAKE_KM
+
+```
